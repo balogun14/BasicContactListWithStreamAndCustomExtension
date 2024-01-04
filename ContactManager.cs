@@ -18,7 +18,9 @@ namespace BasicContactList
         private static void UpdateContactHashset()
         {
             contacts.Clear();
-            hashsetList.Clear(); //this serves as a gc for the list to remove duplicates and clear ds
+            hashsetList.Clear();
+            fileContent.Clear();//this serves as a gc for the list to remove duplicates and clear ds
+            fileContent = ContactStreamReader.ContactReader();
             foreach (var item in fileContent)
             {
                 if (item != null)
@@ -43,7 +45,7 @@ namespace BasicContactList
 
             var contact = new Contact
             {
-                Id = id,
+                Id = Guid.NewGuid().ToString().Substring(0, 5),
                 Name = name,
                 PhoneNumber = phoneNumber,
                 Email = email,
