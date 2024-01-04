@@ -26,12 +26,7 @@ namespace BasicContactList
             Console.WriteLine("Press any key to continue.");
             Console.ReadLine();
         }
-        public static bool ValidateEmail(string value)
-        {
-            string pattern = @"[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-z0-9]+\.[a-zA-Z]+";
-            var match = Regex.IsMatch(value, pattern);
-            return match;
-        }
+
         public void MyMenu()
         {
             bool exit = false;
@@ -58,19 +53,10 @@ namespace BasicContactList
                                 var phoneNumber = Console.ReadLine()!;
                                 Console.Write("Enter email: ");
                                 var email = Console.ReadLine()!;
-                                bool isEmail = ValidateEmail(email!);
-                                if (isEmail != true)
-                                {
-                                    do
-                                    {
-                                        Console.Write("Enter a valid email: ");
-                                        email = Console.ReadLine();
-                                        isEmail = ValidateEmail(email!);
-                                    } while (isEmail != true);
-                                }
+                                string validEmail = Utility.ValidateEmail(email!);
                                 var contactTypeInt = Utility.SelectEnum("Select contact type:\n1 Family & Friends\n2 Work Or Business: ", 1, 2);
                                 var contactType = (ContactType)contactTypeInt;
-                                contactManager.AddContact(name, phoneNumber, email, contactType);
+                                contactManager.AddContact(name, phoneNumber, validEmail, contactType);
                                 break;
                             case 2:
                                 Console.Write("Enter phone number of the contact to delete: ");
@@ -81,10 +67,10 @@ namespace BasicContactList
                                 Console.WriteLine("You can edit only your name and email");
                                 Console.Write("Enter contact name: ");
                                 var nameToEdit = Console.ReadLine()!;
-                                Console.WriteLine("Enter phone number: ");
+                                Console.WriteLine("Enter phone number to search: ");
                                 var phoneToEdit = Console.ReadLine()!;
                                 Console.WriteLine("Enter email: ");
-                                var emailToEdit = Console.ReadLine()!;
+                                var emailToEdit = Utility.ValidateEmail(Console.ReadLine()!);
                                 contactManager.UpdateContact(phoneToEdit, nameToEdit, emailToEdit);
                                 break;
                             case 4:
@@ -99,7 +85,6 @@ namespace BasicContactList
                                 Console.WriteLine("Unknown operation!");
                                 break;
                         }
-
                         if (!exit)
                         {
                             HoldScreen();
@@ -112,6 +97,11 @@ namespace BasicContactList
                 {
 
                     Console.WriteLine(contactDoesNotExist.Message);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
 
                 }
             }

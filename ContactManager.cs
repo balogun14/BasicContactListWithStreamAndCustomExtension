@@ -18,7 +18,7 @@ namespace BasicContactList
         private static void UpdateContactHashset()
         {
             contacts.Clear();
-            hashsetList.Clear();
+            hashsetList.Clear(); //this serves as a gc for the list to remove duplicates and clear ds
             foreach (var item in fileContent)
             {
                 if (item != null)
@@ -27,7 +27,7 @@ namespace BasicContactList
                     contacts.Add(result);
                 }
             }
-            //this serves as a gc for the list to remove duplicates 
+
             hashsetList = [.. contacts];
         }
         public void AddContact(string name, string phoneNumber, string? email, ContactType contactType)
