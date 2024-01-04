@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.RegularExpressions;
 using BasicContactListWithStreamAndCustomExtension;
 using ConsoleTables;
 using Humanizer;
@@ -10,7 +9,7 @@ namespace BasicContactList
     {
 
         private static List<string> fileContent = ContactStreamReader.ContactReader();
-        private static HashSet<Contact> contacts = [];
+        private static HashSet<Contact> contacts = []; //used to avoid duplication
         private static List<Contact> hashsetList = [];
         public ContactManager()
         {
@@ -18,6 +17,8 @@ namespace BasicContactList
         }
         private static void UpdateContactHashset()
         {
+            contacts.Clear();
+            hashsetList.Clear();
             foreach (var item in fileContent)
             {
                 if (item != null)
@@ -26,6 +27,7 @@ namespace BasicContactList
                     contacts.Add(result);
                 }
             }
+            //this serves as a gc for the list to remove duplicates 
             hashsetList = [.. contacts];
         }
         public void AddContact(string name, string phoneNumber, string? email, ContactType contactType)
@@ -59,7 +61,6 @@ namespace BasicContactList
         {
             UpdateContactHashset();
             var contact = FindContact(phoneNumber);
-
             if (contact is null)
             {
                 Console.WriteLine("Unable to delete contact as it does not exist!");
@@ -95,7 +96,8 @@ namespace BasicContactList
 
         public void GetAllContacts()
         {
-            int contactCount = contacts.Count;
+            // UpdateContactHashset();
+            int contactCount = hashsetList.Count;
 
             Console.WriteLine("You have " + "contact".ToQuantity(contactCount));
 
@@ -107,7 +109,7 @@ namespace BasicContactList
 
             var table = new ConsoleTable("Id", "Name", "Phone Number", "Email", "Contact Type", "Date Created");
 
-            foreach (var contact in contacts)
+            foreach (var contact in hashsetList)
             {
                 table.AddRow(contact.Id, contact.Name, contact.PhoneNumber, contact.Email, ((ContactType)contact.ContactType).Humanize(), contact.CreatedAt.Humanize());
             }
@@ -120,12 +122,17 @@ namespace BasicContactList
             var contact = FindContact(phoneNumber) ?? throw new MyCustomExceptions.ContactDoesNotExistException("The contact you searched does not exit", name);
             contact.Name = name;
             contact.Email = email;
-            string jsonString = JsonSerializer.Serialize<Contact>(contact);
-            ContactStreamWriter.ContactWrite(jsonString);
-            Console.WriteLine("Contact updated successfully.");
+            contact.ModifiedAt = DateTime.Now;
+            int lineToUpdate = hashsetList.IndexOf(contact);
+            if (lineToUpdate >= 0 && lineToUpdate < fileContent.Count)
+            {
+                string jsonString = JsonSerializer.Serialize<Contact>(contact);
+                fileContent.RemoveAt(lineToUpdate);
+                fileContent.Insert(lineToUpdate, jsonString);
+            }
+            File.WriteAllLines(".my-contacts/my-contacts.txt", fileContent);
             UpdateContactHashset();
         }
-
         private void Print(Contact contact)
         {
             Console.WriteLine($"Name: {contact!.Name}\nPhone Number: {contact!.PhoneNumber}\nEmail: {contact!.Email}");
@@ -135,7 +142,9 @@ namespace BasicContactList
         {
             return contacts.Any(c => c.PhoneNumber == phoneNumber);
         }
-
-
     }
+
+
+
+
 }
