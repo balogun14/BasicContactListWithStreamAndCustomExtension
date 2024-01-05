@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using BasicContactList.Contracts;
 using BasicContactListWithStreamAndCustomExtension;
 using ConsoleTables;
 using Humanizer;
@@ -9,7 +10,7 @@ namespace BasicContactList
     {
 
         private static List<string> fileContent = ContactStreamReader.ContactReader();
-        private static HashSet<Contact> contacts = []; //used to avoid duplication
+        // private static HashSet<Contact> contacts = []; //used to avoid duplication
         private static List<Contact> hashsetList = [];
         public ContactManager()
         {
@@ -17,24 +18,22 @@ namespace BasicContactList
         }
         private static void UpdateContactHashset()
         {
-            contacts.Clear();
             hashsetList.Clear();
-            fileContent.Clear();//this serves as a gc for the list to remove duplicates and clear ds
+            fileContent.Clear(); //this serves as a gc for the list to remove duplicates and clear ds
             fileContent = ContactStreamReader.ContactReader();
             foreach (var item in fileContent)
             {
                 if (item != null)
                 {
                     var result = Utility.Deserialize(item);
-                    contacts.Add(result);
+                    hashsetList.Add(result);
                 }
             }
 
-            hashsetList = [.. contacts];
         }
         public void AddContact(string name, string phoneNumber, string? email, ContactType contactType)
         {
-            int id = contacts.Count > 0 ? contacts.Count + 1 : 1;
+            int id = hashsetList.Count > 0 ? hashsetList.Count + 1 : 1;
             var isContactExist = IsContactExist(phoneNumber);
 
             if (isContactExist)
@@ -142,11 +141,7 @@ namespace BasicContactList
 
         private bool IsContactExist(string phoneNumber)
         {
-            return contacts.Any(c => c.PhoneNumber == phoneNumber);
+            return hashsetList.Any(c => c.PhoneNumber == phoneNumber);
         }
     }
-
-
-
-
 }

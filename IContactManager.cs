@@ -1,4 +1,4 @@
-﻿namespace BasicContactList
+﻿namespace BasicContactList.Contracts
 {
     public interface IContactManager
     {
