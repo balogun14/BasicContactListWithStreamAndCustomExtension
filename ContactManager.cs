@@ -14,9 +14,9 @@ namespace BasicContactList
         private static List<Contact> hashsetList = [];
         public ContactManager()
         {
-            UpdateContactHashset();
+            UpdateContactLink();
         }
-        private static void UpdateContactHashset()
+        private static void UpdateContactLink()
         {
             hashsetList.Clear();
             fileContent.Clear(); //this serves as a gc for the list to remove duplicates and clear ds
@@ -55,12 +55,12 @@ namespace BasicContactList
             string jsonString = JsonSerializer.Serialize<Contact>(contact);
             ContactStreamWriter.ContactWrite(jsonString);
             Console.WriteLine("Contact added successfully.");
-            UpdateContactHashset();
+            UpdateContactLink();
         }
 
         public void DeleteContact(string phoneNumber)
         {
-            UpdateContactHashset();
+            UpdateContactLink();
             var contact = FindContact(phoneNumber);
             if (contact is null)
             {
@@ -73,7 +73,7 @@ namespace BasicContactList
                 fileContent.RemoveAt(lineToDelete);
                 File.WriteAllLines(".my-contacts/my-contacts.txt", fileContent);
             }
-            UpdateContactHashset();
+            UpdateContactLink();
         }
 
         public Contact? FindContact(string phoneNumber)
@@ -97,7 +97,7 @@ namespace BasicContactList
 
         public void GetAllContacts()
         {
-            // UpdateContactHashset();
+            UpdateContactLink();
             int contactCount = hashsetList.Count;
 
             Console.WriteLine("You have " + "contact".ToQuantity(contactCount));
@@ -132,7 +132,7 @@ namespace BasicContactList
                 fileContent.Insert(lineToUpdate, jsonString);
             }
             File.WriteAllLines(".my-contacts/my-contacts.txt", fileContent);
-            UpdateContactHashset();
+            UpdateContactLink();
         }
         private void Print(Contact contact)
         {

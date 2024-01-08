@@ -17,7 +17,7 @@ namespace BasicContactListWithStreamAndCustomExtension
                 foreach (var item in data)
                 {
                     streamWriter.WriteLine(item);
-                    
+
                 }
             }
         }
@@ -26,14 +26,19 @@ namespace BasicContactListWithStreamAndCustomExtension
 
             try
             {
-                // DirectoryInfo directory = Directory.CreateDirectory(directoryName);
-                StreamWriter streamWriter = new StreamWriter(fullpath, true);
-
-                using (streamWriter)
+                if (File.Exists(fullpath))
                 {
-                    streamWriter.WriteLine(data);
+                    StreamWriter streamWriter = new StreamWriter(fullpath, true);
+                    using (streamWriter)
+                    {
+                        streamWriter.WriteLine(data);
 
+                    }
+                    return;
                 }
+                DirectoryInfo directory = Directory.CreateDirectory(directoryName);
+                ContactWrite(data);
+
             }
             catch (DirectoryNotFoundException directoryNot)
             {
