@@ -48,8 +48,7 @@ namespace BasicContactList
                         switch (option)
                         {
                             case 0:
-
-                                log.Information("Exicted Application at {0}", DateTime.Now);
+                                log.Information("Exited Application at {0}", DateTime.Now);
                                 exit = true;
                                 break;
                             case 1:
@@ -63,13 +62,13 @@ namespace BasicContactList
                                 var contactTypeInt = Utility.SelectEnum("Select contact type:\n1 Family & Friends\n2 Work Or Business: ", 1, 2);
                                 var contactType = (ContactType)contactTypeInt;
                                 contactManager.AddContact(name, phoneNumber, validEmail, contactType);
-                                log.Information("Created New Contact for {1} at {0}", DateTime.Now,name);
+                                log.Information("Created New Contact for {1} at {0}", DateTime.Now, name);
                                 break;
                             case 2:
                                 Console.Write("Enter phone number of the contact to delete: ");
                                 string phone = Console.ReadLine()!;
                                 contactManager.DeleteContact(phone);
-                                log.Information("Deleted {1} at {0}", DateTime.Now,phone);
+                                log.Information("Deleted {1} at {0}", DateTime.Now, phone);
                                 break;
                             case 3:
                                 Console.WriteLine("You can edit only your name and email");
@@ -80,6 +79,7 @@ namespace BasicContactList
                                 Console.WriteLine("Enter email: ");
                                 var emailToEdit = Utility.ValidateEmail(Console.ReadLine()!);
                                 contactManager.UpdateContact(phoneToEdit, nameToEdit, emailToEdit);
+                                log.Information("Edited {1} at {0}", DateTime.Now, phoneToEdit);
                                 break;
                             case 4:
                                 Console.Write("Enter phone number of contact to search:");
@@ -91,6 +91,8 @@ namespace BasicContactList
                                 break;
                             default:
                                 Console.WriteLine("Unknown operation!");
+                                log.Information("An error occured at {0} User Specified Incorrect details", DateTime.Now);
+
                                 break;
                         }
                         if (!exit)
