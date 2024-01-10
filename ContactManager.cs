@@ -56,6 +56,7 @@ namespace BasicContactList
             ContactStreamWriter.ContactWrite(jsonString);
             Console.WriteLine("Contact added successfully.");
             UpdateContactLink();
+
         }
 
         public void DeleteContact(string phoneNumber)

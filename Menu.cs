@@ -1,5 +1,6 @@
 ﻿using BasicContactList.Contracts;
 using BasicContactListWithStreamAndCustomExtension;
+using Serilog;
 
 namespace BasicContactList
 {
@@ -35,15 +36,20 @@ namespace BasicContactList
             {
                 try
                 {
+                    using var log = new LoggerConfiguration()
+                     .WriteTo.Console()
+                     .WriteTo.File("log.txt")
+                     .CreateLogger();
                     Console.Clear();
                     PrintMenu();
                     int option;
-
                     if (int.TryParse(Console.ReadLine(), out option))
                     {
                         switch (option)
                         {
                             case 0:
+
+                                log.Information("Exicted Application at {0}", DateTime.Now);
                                 exit = true;
                                 break;
                             case 1:
@@ -57,11 +63,13 @@ namespace BasicContactList
                                 var contactTypeInt = Utility.SelectEnum("Select contact type:\n1 Family & Friends\n2 Work Or Business: ", 1, 2);
                                 var contactType = (ContactType)contactTypeInt;
                                 contactManager.AddContact(name, phoneNumber, validEmail, contactType);
+                                log.Information("Created New Contact for {1} at {0}", DateTime.Now,name);
                                 break;
                             case 2:
                                 Console.Write("Enter phone number of the contact to delete: ");
                                 string phone = Console.ReadLine()!;
                                 contactManager.DeleteContact(phone);
+                                log.Information("Deleted {1} at {0}", DateTime.Now,phone);
                                 break;
                             case 3:
                                 Console.WriteLine("You can edit only your name and email");

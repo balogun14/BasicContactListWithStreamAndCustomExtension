@@ -2,3 +2,4 @@
 {"Name":"Aqwert","PhoneNumber":"1234567","Email":"awwal@gmail.com","ContactType":1,"Id":"68737","CreatedAt":"2024-01-04T11:34:01.6935423+01:00","ModifiedAt":null}
 {"Name":"Sanusi","PhoneNumber":"0123456","Email":"shuaib@gmail.com","ContactType":1,"Id":"1ebb9","CreatedAt":"2024-01-05T19:48:15.6592195+01:00","ModifiedAt":"2024-01-05T19:49:12.4707842+01:00"}
 {"Name":"Feranmi","PhoneNumber":"7641611","Email":"awwal@gmail.com","ContactType":2,"Id":"fceab","CreatedAt":"2024-01-08T09:53:37.847878+01:00","ModifiedAt":"2024-01-08T09:54:50.2498591+01:00"}
+{"Name":"Awwal","PhoneNumber":"09123456","Email":"awwalW@gmail.com","ContactType":2,"Id":"b4c9c","CreatedAt":"2024-01-10T10:04:09.5094827+01:00","ModifiedAt":null}
